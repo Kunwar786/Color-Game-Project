@@ -1,0 +1,227 @@
+<html>
+<head>
+	<title>The great Color Game Project</title>
+	<link rel="stylesheet" type="text/css" href="colorGame.css">
+</head>
+<style>
+	body{
+	background-color: #232323;
+	margin:0;
+	font-family: sans-serif ;
+}
+
+h1{
+	line-height: 1.1;
+	font-weight: normal;
+	color:white;
+	background:steelblue;
+	margin:0;
+	text-decoration: uppercase;
+	text-align: center;
+	padding: 20px 0;
+}
+
+.square{
+	width:30%;
+	background: purple;
+	padding-bottom: 30%;
+	float:left;
+	margin:1.66%;
+	border-radius: 50%;
+	transition: background-color 0.7s;
+	-webkit-transition: background-color 0.7s;
+	-moz-transition: background-color 0.7s;
+}
+
+#container{
+	margin:20px auto;
+	max-width: 600px;
+}
+
+#stripe{
+	height:30px;
+	background:white;
+	text-align: center
+}
+
+#message{
+	display: inline-block;
+	width: 20%;
+}
+
+#colorDisplay{
+	font-size: 200%;
+	text-transform: uppercase;
+}
+
+.selected{
+	color: white;
+	background-color: steelblue;
+}
+
+button{
+	border: none;
+	background: none;
+	height: 100%;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color:steelblue;
+	font-weight: 700;
+	font-size: inherit;
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	outline:none;
+}
+
+button:hover{
+	color: white;
+	background-color: steelblue;
+}
+
+</style>
+<body>
+	<h1>THE GREAT 
+		<br>
+		<span id="colorDisplay"></span>
+		<br>
+		GUESSING GAME
+	</h1>
+
+	<div id="stripe">
+		<button id="reset">New Color</button>
+		<span id ="message"></span>
+		<button id="easybtn">Easy</button>
+		<button id="hardbtn" class="selected">Hard</button>
+	</div>
+	<div id="container">
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+	</div>
+<script>
+	var numColors=6;
+var colors= generateRandomColor(numColors);
+var pickedColor=pickColor();
+var colorDisplay=document.querySelector("#colorDisplay");
+var h1=document.querySelector("h1");
+var squares = document.querySelectorAll(".square");
+var msg=document.querySelector("#message");
+var resetColor=document.querySelector("#reset");
+var easybtn=document.querySelector("#easybtn");
+var hardbtn=document.querySelector("#hardbtn");
+
+easybtn.addEventListener("click",function(){
+	hardbtn.classList.remove("selected");
+	this.classList.add("selected");
+	numColors=3;
+	colors=generateRandomColor(numColors);
+	pickedColor=pickColor();
+	colorDisplay.textContent=pickedColor;
+	msg.textContent="";
+	for(var i=0;i<squares.length;i++){
+		if(colors[i]){
+			squares[i].style.backgroundColor=colors[i];
+		}else{
+			squares[i].style.display="none";
+		}
+	}
+
+})
+
+hardbtn.addEventListener("click",function(){
+	easybtn.classList.remove("selected");
+	this.classList.add("selected");
+	numColors=6;
+	colors=generateRandomColor(numColors);
+	pickedColor=pickColor();
+	colorDisplay.textContent=pickedColor;
+	msg.textContent="";
+	for(var i=0;i<squares.length;i++){
+			squares[i].style.backgroundColor=colors[i];
+			squares[i].style.display="block";
+		}
+})
+
+
+resetColor.addEventListener("click",function(){
+	resetColor.textContent="NEW COLOR";
+	//Pick random color
+	colors=generateRandomColor(numColors);
+	//change the random number
+	pickedColor=pickColor();
+	//change heading
+	colorDisplay.textContent=pickedColor;
+	//assign color to squares
+	for(var i=0;i<squares.length;i++){
+		squares[i].style.backgroundColor=colors[i];
+	}
+	//changing h1 color
+	h1.style.backgroundColor="steelblue";
+	//Reset message button
+	msg.textContent="";
+});
+
+colorDisplay.textContent=pickedColor;
+
+for(var i=0;i<squares.length;i++){
+	//giving background color
+	squares[i].style.backgroundColor= colors[i];
+	//retrieving rgb color
+	squares[i].addEventListener("click",function(){
+		var clickedColor = this.style.backgroundColor;
+		console.log(clickedColor,pickedColor);
+		if(clickedColor===pickedColor){
+			msg.textContent="Correct !";
+			changeColor(pickedColor);
+			h1.style.backgroundColor=pickedColor;
+			resetColor.textContent="Play Again?"
+		}else{
+			this.style.backgroundColor="#232323";
+			msg.textContent="Try Again !"
+		}
+	});
+}
+
+function pickColor(){
+	var ran=Math.floor(Math.random()*colors.length);
+	return colors[ran];
+}
+
+function changeColor(color){
+	for(var i=0;i<squares.length;i++){
+		squares[i].style.backgroundColor=color;
+	}
+}
+
+// function randomColor(){
+// 	var rand=Math.floor(Math.random()*colors.length);
+// 	return colors(rand);
+// }
+
+function generateRandomColor(num){
+	var arr=[];
+	//generating random color
+	for(var i=0;i<num;i++){
+		arr.push(randomColor());
+	}
+
+	return arr;
+}
+
+function randomColor(){
+	//red
+	var r=Math.floor(Math.random()*256);
+	//green
+	var g=Math.floor(Math.random()*256);
+	//blue
+	var b=Math.floor(Math.random()*256);
+
+	return "rgb("+ r +", "+ g +", "+ b +")";
+}
+</script>
+</body>
+</html>
